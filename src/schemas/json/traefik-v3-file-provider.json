@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://json.schemastore.org/traefik-v2.json",
-  "title": "Traefik v2 Dynamic Configuration",
+  "$id": "https://json.schemastore.org/traefik-v3.json",
+  "title": "Traefik v3 Dynamic Configuration",
   "properties": {
     "http": {
       "$ref": "#/$defs/dynamicHTTPConfiguration"
@@ -108,6 +108,31 @@
         },
         "recoveryDuration": {
           "type": "string"
+        },
+        "responseCode": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "dynamicClientTLS": {
+      "additionalProperties": false,
+      "properties": {
+        "ca": {
+          "type": "string"
+        },
+        "caOptional": {
+          "type": "boolean"
+        },
+        "cert": {
+          "type": "string"
+        },
+        "insecureSkipVerify": {
+          "type": "boolean"
+        },
+        "key": {
+          "type": "string"
         }
       },
       "type": "object"
@@ -115,7 +140,19 @@
     "dynamicCompress": {
       "additionalProperties": false,
       "properties": {
+        "defaultEncoding": {
+          "type": "string"
+        },
         "excludedContentTypes": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "includedContentTypes": {
           "items": {
             "type": "string"
           },
@@ -145,6 +182,10 @@
       "properties": {
         "httpOnly": {
           "type": "boolean"
+        },
+        "maxAge": {
+          "format": "int64",
+          "type": "integer"
         },
         "name": {
           "type": "string"
@@ -224,6 +265,15 @@
     "dynamicForwardAuth": {
       "additionalProperties": false,
       "properties": {
+        "addAuthCookiesToResponse": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "address": {
           "type": "string"
         },
@@ -249,7 +299,7 @@
           "type": "string"
         },
         "tls": {
-          "$ref": "#/$defs/typesClientTLS"
+          "$ref": "#/$defs/dynamicClientTLS"
         },
         "trustForwardHeader": {
           "type": "boolean"
@@ -274,6 +324,21 @@
         },
         "responseHeaderTimeout": {
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "dynamicGrpcWeb": {
+      "additionalProperties": false,
+      "properties": {
+        "allowOrigins": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         }
       },
       "type": "object"
@@ -387,6 +452,9 @@
         "contentSecurityPolicy": {
           "type": "string"
         },
+        "contentSecurityPolicyReportOnly": {
+          "type": "string"
+        },
         "contentTypeNosniff": {
           "type": "boolean"
         },
@@ -479,6 +547,10 @@
         "ipStrategy": {
           "$ref": "#/$defs/dynamicIPStrategy"
         },
+        "rejectStatusCode": {
+          "format": "int64",
+          "type": "integer"
+        },
         "sourceRange": {
           "items": {
             "type": "string"
@@ -544,6 +616,9 @@
     "dynamicMiddleware": {
       "additionalProperties": false,
       "properties": {
+        "URLRewrite": {
+          "$ref": "#/$defs/dynamicURLRewrite"
+        },
         "addPrefix": {
           "$ref": "#/$defs/dynamicAddPrefix"
         },
@@ -573,6 +648,9 @@
         },
         "forwardAuth": {
           "$ref": "#/$defs/dynamicForwardAuth"
+        },
+        "grpcWeb": {
+          "$ref": "#/$defs/dynamicGrpcWeb"
         },
         "headers": {
           "$ref": "#/$defs/dynamicHeaders"
@@ -610,6 +688,12 @@
         },
         "replacePathRegex": {
           "$ref": "#/$defs/dynamicReplacePathRegex"
+        },
+        "requestHeaderModifier": {
+          "$ref": "#/$defs/dynamicRequestHeaderModifier"
+        },
+        "requestRedirect": {
+          "$ref": "#/$defs/dynamicRequestRedirect"
         },
         "retry": {
           "$ref": "#/$defs/dynamicRetry"
@@ -772,6 +856,58 @@
       },
       "type": "object"
     },
+    "dynamicRequestHeaderModifier": {
+      "additionalProperties": false,
+      "properties": {
+        "add": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "remove": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "set": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "dynamicRequestRedirect": {
+      "additionalProperties": false,
+      "properties": {
+        "hostname": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "pathPrefix": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "scheme": {
+          "type": "string"
+        },
+        "statusCode": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
     "dynamicResponseForwarding": {
       "additionalProperties": false,
       "properties": {
@@ -820,6 +956,9 @@
           "type": "integer"
         },
         "rule": {
+          "type": "string"
+        },
+        "ruleSyntax": {
           "type": "string"
         },
         "service": {
@@ -884,6 +1023,10 @@
       "properties": {
         "url": {
           "type": "string"
+        },
+        "weight": {
+          "format": "int64",
+          "type": "integer"
         }
       },
       "type": "object"
@@ -892,10 +1035,7 @@
       "additionalProperties": false,
       "properties": {
         "followRedirects": {
-          "type": [
-            "boolean",
-            "null"
-          ]
+          "type": "boolean"
         },
         "headers": {
           "additionalProperties": {
@@ -912,6 +1052,9 @@
         "method": {
           "type": "string"
         },
+        "mode": {
+          "type": "string"
+        },
         "path": {
           "type": "string"
         },
@@ -922,13 +1065,14 @@
         "scheme": {
           "type": "string"
         },
+        "status": {
+          "format": "int64",
+          "type": "integer"
+        },
         "timeout": {
           "type": "string"
         }
       },
-      "required": [
-        "followRedirects"
-      ],
       "type": "object"
     },
     "dynamicServersLoadBalancer": {
@@ -1006,6 +1150,9 @@
         },
         "serverName": {
           "type": "string"
+        },
+        "spiffe": {
+          "$ref": "#/$defs/dynamicSpiffe"
         }
       },
       "type": "object"
@@ -1039,6 +1186,24 @@
         },
         "requestHost": {
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "dynamicSpiffe": {
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "trustDomain": {
+          "type": "string"
         }
       },
       "type": "object"
@@ -1097,6 +1262,12 @@
         "routers": {
           "additionalProperties": {
             "$ref": "#/$defs/dynamicTCPRouter"
+          },
+          "type": "object"
+        },
+        "serversTransports": {
+          "additionalProperties": {
+            "$ref": "#/$defs/dynamicTCPServersTransport"
           },
           "type": "object"
         },
@@ -1192,6 +1363,9 @@
         "rule": {
           "type": "string"
         },
+        "ruleSyntax": {
+          "type": "string"
+        },
         "service": {
           "type": "string"
         },
@@ -1206,6 +1380,9 @@
       "properties": {
         "address": {
           "type": "string"
+        },
+        "tls": {
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -1225,9 +1402,30 @@
             "null"
           ]
         },
+        "serversTransport": {
+          "type": "string"
+        },
         "terminationDelay": {
           "format": "int64",
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "dynamicTCPServersTransport": {
+      "additionalProperties": false,
+      "properties": {
+        "dialKeepAlive": {
+          "type": "string"
+        },
+        "dialTimeout": {
+          "type": "string"
+        },
+        "terminationDelay": {
+          "type": "string"
+        },
+        "tls": {
+          "$ref": "#/$defs/dynamicTLSClientConfig"
         }
       },
       "type": "object"
@@ -1349,6 +1547,42 @@
         },
         "serialNumber": {
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "dynamicTLSClientConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "certificates": {
+          "items": {
+            "$ref": "#/$defs/tlsCertificate"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "insecureSkipVerify": {
+          "type": "boolean"
+        },
+        "peerCertURI": {
+          "type": "string"
+        },
+        "rootCAs": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "serverName": {
+          "type": "string"
+        },
+        "spiffe": {
+          "$ref": "#/$defs/dynamicSpiffe"
         }
       },
       "type": "object"
@@ -1476,6 +1710,21 @@
             "array",
             "null"
           ]
+        }
+      },
+      "type": "object"
+    },
+    "dynamicURLRewrite": {
+      "additionalProperties": false,
+      "properties": {
+        "hostname": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "pathPrefix": {
+          "type": "string"
         }
       },
       "type": "object"
@@ -1633,27 +1882,6 @@
         },
         "defaultGeneratedCert": {
           "$ref": "#/$defs/tlsGeneratedCert"
-        }
-      },
-      "type": "object"
-    },
-    "typesClientTLS": {
-      "additionalProperties": false,
-      "properties": {
-        "ca": {
-          "type": "string"
-        },
-        "caOptional": {
-          "type": "boolean"
-        },
-        "cert": {
-          "type": "string"
-        },
-        "insecureSkipVerify": {
-          "type": "boolean"
-        },
-        "key": {
-          "type": "string"
         }
       },
       "type": "object"
